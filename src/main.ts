@@ -13,12 +13,24 @@ import { createApp } from 'vue'
 import { registerPlugins } from '@/plugins'
 const app = createApp({})
 
+// Router
 import router from '@/router/router'
 app.use(router)
 
-import axios from 'axios'
+// Pinia
+import { createPinia } from 'pinia'
+const pinia = createPinia()
+app.use(pinia)
 
-window.axios = axios
+import axios from 'axios'
+declare global {
+    interface Window {
+        api:any;
+    }
+}
+window.api = axios.create({
+    baseURL: 'http://localhost:8000/api/admin/',
+});
 
 registerPlugins(app)
 
