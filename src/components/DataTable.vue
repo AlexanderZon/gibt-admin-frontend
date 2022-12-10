@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-table>
+        <v-table class="data-table">
             <thead>
                 <tr>
                     <th v-for="header in headers" :class="`${header.class}`" @click="sortBy(header.value)">
@@ -9,9 +9,8 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in items">
-                    <slot v-for="header in headers" :name="`${header.value}`" v-bind="{ item: item }"></slot>
-                </tr>
+                <slot name="items" v-bind="{ items: filtered_items }"></slot>
+                    <!-- <slot v-for="header in headers" :name="`${header.value}`" v-bind="{ item: item }"></slot> -->
             </tbody>
         </v-table>
     </div>
@@ -55,4 +54,14 @@
         }
     })
 
+    let sortBy = function(by: string) {
+
+    }
+
 </script>
+
+<style lang="css">
+    .data-table thead tr th {
+        cursor: pointer
+    }
+</style>

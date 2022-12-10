@@ -17,9 +17,22 @@
                 </template>
             </v-toolbar>
             <v-card-text>
-                <DataTable :items="items" :headers="headers">
-                    <template v-slot:item.name="{ item }">
-                        {{ item.name }}
+                <DataTable :items="items" :headers="headers" :search="search">
+                    <template #items="{ items : Array }">
+                        <tr v-for="(item, index) in items" :key="index">
+                            <td>
+                                <PictureFormInput :picture="item.icon" :url="`${$store.$base_url}/${item.id}/picture`" @update="updateModelStore"></PictureFormInput>
+                            </td>
+                            <td>{{ item.name }}</td>
+                            <td class="text-right">
+                                <v-btn color="amber" variant="plain" flat icon @click="showFormDialog(item)">
+                                    <v-icon>mdi-pencil</v-icon>
+                                </v-btn>
+                                <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
+                                    <v-icon>mdi-delete</v-icon>
+                                </v-btn>
+                            </td>
+                        </tr>
                     </template>
                 </DataTable>
                 <!-- <v-table>
@@ -105,7 +118,7 @@ let items: Ref<Array<Vision>> = computed(() => {
 })
 
 let loading = ref(false)
-let search : Ref<String|null> = ref(null)
+let search : Ref<string> = ref("")
 
 // Data Form
 let form_dialog = ref(false)
