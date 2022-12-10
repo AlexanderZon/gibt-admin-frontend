@@ -5,6 +5,7 @@ const base = 'visions'
 
 export const useVisionsStore = defineStore('visions', {
     state: () => ({
+        $base_url: base,
         visions: [] as Vision[],
     }),
     actions: {
@@ -29,10 +30,12 @@ export const useVisionsStore = defineStore('visions', {
 
         },
         async update(vision: Vision) {
-
+            const response = await window.api.put(`${base}/${vision.id}`, vision)
+            this.udpateStoreElement(new Vision(response.data.data))
         },
         async delete(vision: Vision) {
-
+            const response = await window.api.delete(`${base}/${vision.id}`, vision)
+            this.deleteStoreElement(new Vision(response.data.data))
         },
         async picture(vision: Vision, files: File[]) {
             const response = await window.api.post(`${base}/${vision.id}/picture`, { file: files[0] }, {
@@ -40,9 +43,9 @@ export const useVisionsStore = defineStore('visions', {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.updateVision(new Vision(response.data.data))
+            this.udpateStoreElement(new Vision(response.data.data))
         },
-        updateVision(vision: Vision) {
+        udpateStoreElement(vision: Vision) {
             let element:Vision|undefined = this.visions.find((element: Vision) => {
                 return (element.id == vision.id)
             })
@@ -50,7 +53,15 @@ export const useVisionsStore = defineStore('visions', {
                 let index: number = this.visions.indexOf(element)
                 if(index > -1) this.visions.splice(index, 1, vision)
             }
-            
+        },
+        deleteStoreElement(vision: Vision) {
+            let element:Vision|undefined = this.visions.find((element: Vision) => {
+                return (element.id == vision.id)
+            })
+            if(typeof element !== "undefined"){
+                let index: number = this.visions.indexOf(element)
+                if(index > -1) this.visions.splice(index, 1)
+            }
         }
     },
 })
