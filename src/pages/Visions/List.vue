@@ -81,7 +81,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import type { Ref } from 'vue'
-import { Vision, VisionIE } from '@/models/Vision'
+import { Vision } from '@/models/Vision'
 import { useVisionsStore } from '@/stores/visions/index'
 import PictureFormInput from '@/components/inputs/PictureFormInput.vue'
 import ConfirmDeleteDialog from '@/components/inputs/ConfirmDeleteDialog.vue'
@@ -104,12 +104,9 @@ let search: Ref<string> = ref("")
 
 // Data Form
 let form_dialog = ref(false)
-let actual_model: VisionIE = reactive({ id: null, name: null, order: null, icon: null})
+let actual_model: Vision = reactive(new Vision())
 let setActualModel = function(element: any){
-    actual_model.id = element.id
-    actual_model.name = element.name
-    actual_model.order = element.order
-    actual_model.icon = element.icon
+    actual_model.fill(element)
 }
 let showFormDialog = function (element: any) {
     setActualModel(element);
@@ -151,7 +148,7 @@ let updateModelStore = function (element: any) {
 // Delete Vision
 let delete_dialog = ref(false)
 let showDeleteDialog = function (element: any) {
-    setActualModel(element);
+    setActualModel(element)
     delete_dialog.value = true
 }
 let handleDeleteSubmit = function () {
@@ -161,8 +158,6 @@ let handleDeleteSubmit = function () {
         loading.value = false
     })
 }
-
-// Validations
 
 onMounted(() => {
     loading.value = true

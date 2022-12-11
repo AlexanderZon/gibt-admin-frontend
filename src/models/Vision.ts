@@ -4,15 +4,12 @@ export class Vision {
     name: string;
     order: number;
     constructor(data: any = {}) {
+        this.fill(data)
+    }
+    fill(data: any = {}){
         this.id = data.id;
         this.icon = data.icon;
         this.name = data.name;
         this.order = data.order;
     }
-}
-export interface VisionIE {
-    id: number|null;
-    icon: string|null;
-    name: string|null;
-    order: number|null;
 }

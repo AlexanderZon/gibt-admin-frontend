@@ -44,8 +44,8 @@
 <script setup lang="ts">
     import type { Ref } from 'vue'
     import { ref, computed } from 'vue'
-    import { useVuelidate, ValidationRule } from '@vuelidate/core'
-    import { required, requiredIf } from '@vuelidate/validators'
+    import { useVuelidate } from '@vuelidate/core'
+    import { requiredIf } from '@vuelidate/validators'
 
     const props = defineProps({
         url: { type: String, required: true },
@@ -67,7 +67,7 @@
     })
     const v$ = useVuelidate(rules, { files })
 
-    let showIconFormDialog = function (vision: any) {
+    let showIconFormDialog = function () {
         icon_dialog.value = true
         files.value = []
         v$.value.files.$reset()
