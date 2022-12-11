@@ -18,7 +18,11 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <v-file-input accept="image/*" label="Icon" v-model="files"></v-file-input>
+                                <v-file-input accept="image/*" label="Icon" v-model="files"
+                                    :error="v$.files.$dirty && v$.files.$error"
+                                    :rules="[
+                                        !v$.files.required.$invalid || 'This field is required',
+                                    ]"></v-file-input>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -39,7 +43,9 @@
 
 <script setup lang="ts">
     import type { Ref } from 'vue'
-    import { ref } from 'vue'
+    import { ref, computed } from 'vue'
+    import { useVuelidate, ValidationRule } from '@vuelidate/core'
+    import { required, requiredIf } from '@vuelidate/validators'
 
     const props = defineProps({
         url: { type: String, required: true },
@@ -51,24 +57,36 @@
 
     let icon_dialog = ref(false)
     let component_loading = ref(false)
-    let files: Ref<File[]>
+    let files: Ref<File[]> = ref([])
+    const rules = computed(() => {
+        return {
+            files: { required: requiredIf(() => {
+                return files.value.length == 0;
+            }) }
+        }
+    })
+    const v$ = useVuelidate(rules, { files })
 
     let showIconFormDialog = function (vision: any) {
         icon_dialog.value = true
-        files = ref([])
+        files.value = []
+        v$.value.files.$reset()
     }
     let closeIconFormDialog = function () {
         icon_dialog.value = false
     }
     let handleIconFormSubmit = async function() {
-        icon_dialog.value = false
-        component_loading.value = true
-        const response = await window.api.post(`${props.url}`, { file: files.value[0] }, {
-            headers: {
-                'Content-Type': 'multipart/form-data'
-            }
-        })
-        component_loading.value = false
-        emit('update', response.data.data)
+        v$.value.files.$validate()
+        if(!v$.value.files.$invalid){
+            icon_dialog.value = false
+            component_loading.value = true
+            const response = await window.api.post(`${props.url}`, { file: files.value[0] }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            component_loading.value = false
+            emit('update', response.data.data)
+        }
     }
 </script>

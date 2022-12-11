@@ -9,63 +9,32 @@
                 <v-toolbar-title class="text-h6 pl-3">
                     Visions
                 </v-toolbar-title>
-                <v-text-field class="mr-2" label="Search" v-model="search" required hide-details density="compact" variant="filled" append-inner-icon="mdi-magnify"></v-text-field>
+                <v-text-field class="mr-2" label="Search" v-model="search" required hide-details density="compact"
+                    variant="filled" append-inner-icon="mdi-magnify"></v-text-field>
 
                 <template v-slot:append>
-                    
-                    <v-btn icon="mdi-plus" @click="showFormDialog({})"></v-btn>
+
+                    <v-btn variant="plain" icon="mdi-plus" @click="showFormDialog({})"></v-btn>
                 </template>
             </v-toolbar>
             <v-card-text>
                 <DataTable :items="items" :headers="headers" :search="search">
-                    <template #items="{ items : Array }">
-                        <tr v-for="(item, index) in items" :key="index">
-                            <td>
-                                <PictureFormInput :picture="item.icon" :url="`${$store.$base_url}/${item.id}/picture`" @update="updateModelStore"></PictureFormInput>
-                            </td>
-                            <td>{{ item.name }}</td>
-                            <td class="text-right">
-                                <v-btn color="amber" variant="plain" flat icon @click="showFormDialog(item)">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                                <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
-                                    <v-icon>mdi-delete</v-icon>
-                                </v-btn>
-                            </td>
-                        </tr>
+                    <template #item.icon="{ item }">
+                        <PictureFormInput :picture="item.icon" :url="`${store$.$base_url}/${item.id}/picture`"
+                            @update="updateModelStore"></PictureFormInput>
+                    </template>
+                    <template #item.name="{ item }">
+                        {{ item.name }}
+                    </template>
+                    <template #item.actions="{ item }">
+                        <v-btn color="amber" variant="plain" flat icon @click="showFormDialog(item)">
+                            <v-icon>mdi-pencil</v-icon>
+                        </v-btn>
+                        <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
+                            <v-icon>mdi-delete</v-icon>
+                        </v-btn>
                     </template>
                 </DataTable>
-                <!-- <v-table>
-                    <thead>
-                        <tr>
-                            <th class="text-left">
-                                Icon
-                            </th>
-                            <th class="text-left">
-                                Name
-                            </th>
-                            <th class="text-right">
-                                Actions
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="item in filtered_items" :key="item.name">
-                            <td>
-                                <PictureFormInput :picture="item.icon" :url="`${$store.$base_url}/${item.id}/picture`" @update="updateModelStore"></PictureFormInput>
-                            </td>
-                            <td>{{ item.name }}</td>
-                            <td class="text-right">
-                                <v-btn color="amber" variant="plain" flat icon @click="showFormDialog(item)">
-                                    <v-icon>mdi-pencil</v-icon>
-                                </v-btn>
-                                <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
-                                    <v-icon>mdi-delete</v-icon>
-                                </v-btn>
-                            </td>
-                        </tr>
-                    </tbody>
-                </v-table> -->
             </v-card-text>
         </v-card>
         <v-dialog v-model="form_dialog" persistent max-width="500px">
@@ -77,11 +46,15 @@
                     <v-container>
                         <v-row>
                             <v-col cols="12">
-                                <v-text-field label="Name *" v-model="actual_model.name" required></v-text-field>
+                                <v-text-field ref="actualModelName" label="Name"
+                                    :error="v$.actual_model.name.$dirty && v$.actual_model.name.$error"
+                                    :rules="[
+                                        !v$.actual_model.name.required.$invalid || 'This field is required',
+                                    ]"
+                                    v-model="actual_model.name"></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
-                    <small>* Indicates required field</small>
                 </v-card-text>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -94,77 +67,109 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-        <ConfirmDeleteDialog v-model="delete_dialog" @confirm="handleDeleteSubmit"></ConfirmDeleteDialog>
+        <ConfirmDeleteDialog v-model="delete_dialog" @confirm="handleDeleteSubmit">
+            <template #title>
+                Confir Delete Vision?
+            </template>
+            <template #content>
+                Are you sure you want to delete "{{ actual_model.name }}" vision?
+            </template>
+        </ConfirmDeleteDialog>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import type { Ref } from 'vue'
-import { Vision } from '@/models/Vision'
+import { Vision, VisionIE } from '@/models/Vision'
 import { useVisionsStore } from '@/stores/visions/index'
 import PictureFormInput from '@/components/inputs/PictureFormInput.vue'
 import ConfirmDeleteDialog from '@/components/inputs/ConfirmDeleteDialog.vue'
 import DataTable from '@/components/DataTable.vue'
+import { useVuelidate } from '@vuelidate/core'
+import { required } from '@vuelidate/validators'
 
-const $store = useVisionsStore()
+const store$ = useVisionsStore()
 let headers: Array<any> = [
     { text: 'Icon', value: 'icon' },
-    { text: 'Name', value: 'icon' },
+    { text: 'Name', value: 'name', sortable: true },
     { text: 'Actions', value: 'actions', class: 'text-right' },
 ]
 let items: Ref<Array<Vision>> = computed(() => {
-    return $store.visions
+    return store$.visions
 })
 
 let loading = ref(false)
-let search : Ref<string> = ref("")
+let search: Ref<string> = ref("")
 
 // Data Form
 let form_dialog = ref(false)
-let actual_model: Ref<Vision>
+let actual_model: VisionIE = reactive({ id: null, name: null, order: null, icon: null})
+let setActualModel = function(element: any){
+    actual_model.id = element.id
+    actual_model.name = element.name
+    actual_model.order = element.order
+    actual_model.icon = element.icon
+}
 let showFormDialog = function (element: any) {
-    actual_model = ref(new Vision(element));
+    setActualModel(element);
     form_dialog.value = true
 }
 let closeFormDialog = function () {
     form_dialog.value = false
 }
-let handleFormSubmit = function() {
-    form_dialog.value = false
-    loading.value = true
-    if(actual_model.value.id == null){
-        $store.store(actual_model.value).then((response: any) => {
-            loading.value = false
-        })
-    } else {
-        $store.update(actual_model.value).then((response: any) => {
-            loading.value = false
-        })
+const rules = computed(() => {
+    return {
+        actual_model: {
+            name: { required },
+            icon: { required }
+        }
+    }
+})
+const v$ = useVuelidate(rules, { actual_model })
+let handleFormSubmit = async function () {
+    v$.value.actual_model.name.$validate();
+
+    if (!v$.value.actual_model.name.$error) {
+        form_dialog.value = false
+        loading.value = true
+        if(actual_model.id == null){
+            store$.store(new Vision(actual_model)).then((response: any) => {
+                loading.value = false
+            })
+        } else {
+            store$.update(new Vision(actual_model)).then((response: any) => {
+                loading.value = false
+            })
+        }
     }
 }
-let updateModelStore = function(element:any){
-    $store.udpateStoreElement(new Vision(element))
+let updateModelStore = function (element: any) {
+    store$.udpateStoreElement(new Vision(element))
 }
 
 // Delete Vision
 let delete_dialog = ref(false)
 let showDeleteDialog = function (element: any) {
-    actual_model = ref(new Vision(element));
+    setActualModel(element);
     delete_dialog.value = true
 }
-let handleDeleteSubmit = function (){
+let handleDeleteSubmit = function () {
     delete_dialog.value = false
     loading.value = true
-    $store.delete(actual_model.value).then((response: any) => {
+    store$.delete(new Vision(actual_model)).then((response: any) => {
         loading.value = false
     })
 }
 
+// Validations
+
 onMounted(() => {
     loading.value = true
-    $store.get().then((response: any) => {
+    store$.get().then((response: any) => {
         loading.value = false
     })
 })
+
+
 </script>
