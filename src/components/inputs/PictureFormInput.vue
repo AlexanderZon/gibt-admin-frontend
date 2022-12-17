@@ -6,7 +6,7 @@
             </v-btn>
         </template>
         <template v-else>
-            <v-img class="bg-white" width="50" :aspect-ratio="1" :src="picture" cover @click="showIconFormDialog"></v-img>
+            <v-img class="bg-white" :width="width" :aspect-ratio="1" :src="picture" cover @click="showIconFormDialog"></v-img>
         </template>
         
         <v-dialog v-model="icon_dialog" persistent max-width="500px">
@@ -51,6 +51,7 @@
         url: { type: String, required: true },
         picture: { type: String, default: null },
         loading: { type: Boolean, default: false },
+        width: { type: String, default: '50' }
     })
     
     const emit = defineEmits(['update'])

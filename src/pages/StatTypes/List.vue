@@ -76,7 +76,7 @@
         </v-dialog>
         <ConfirmDeleteDialog v-model="delete_dialog" @confirm="handleDeleteSubmit">
             <template #title>
-                Confir Delete Stat Type?
+                Confirm to delete Stat Type?
             </template>
             <template #content>
                 Are you sure you want to delete "{{ actual_model.name }}" stat type?

@@ -69,7 +69,7 @@
         </v-dialog>
         <ConfirmDeleteDialog v-model="delete_dialog" @confirm="handleDeleteSubmit">
             <template #title>
-                Confir Delete Vision?
+                Confirm to delete Vision?
             </template>
             <template #content>
                 Are you sure you want to delete "{{ actual_model.name }}" vision?

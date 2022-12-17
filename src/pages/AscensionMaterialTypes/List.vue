@@ -7,7 +7,7 @@
                 </template> -->
 
                 <v-toolbar-title class="text-h6 pl-3">
-                    Weapon Types
+                    Ascension Material Types
                 </v-toolbar-title>
                 <v-text-field class="mr-2" label="Search" v-model="search" required hide-details density="compact"
                     variant="filled" append-inner-icon="mdi-magnify"></v-text-field>
@@ -19,10 +19,6 @@
             </v-toolbar>
             <v-card-text>
                 <DataTable :items="items" :headers="headers" :search="search">
-                    <template #item.icon="{ item }">
-                        <PictureFormInput :picture="item.icon" :url="`${store$.$base_url}/${item.id}/picture`"
-                            @update="updateModelStore"></PictureFormInput>
-                    </template>
                     <template #item.name="{ item }">
                         {{ item.name }}
                     </template>
@@ -40,7 +36,7 @@
         <v-dialog v-model="form_dialog" persistent max-width="500px">
             <v-card>
                 <v-card-title>
-                    <span class="text-h5">Weapon Types Form</span>
+                    <span class="text-h5">Ascension Material Types Form</span>
                 </v-card-title>
                 <v-card-text>
                     <v-container>
@@ -69,10 +65,10 @@
         </v-dialog>
         <ConfirmDeleteDialog v-model="delete_dialog" @confirm="handleDeleteSubmit">
             <template #title>
-                Confirm to delete Weapon Type?
+                Confirm to delete Ascension Material Type?
             </template>
             <template #content>
-                Are you sure you want to delete "{{ actual_model.name }}" weapon type?
+                Are you sure you want to delete "{{ actual_model.name }}" ascension material type?
             </template>
         </ConfirmDeleteDialog>
     </div>
@@ -81,22 +77,20 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import type { Ref } from 'vue'
-import { WeaponType } from '@/models/WeaponType'
-import { useWeaponTypesStore } from '@/stores/weapon_types/index'
-import PictureFormInput from '@/components/inputs/PictureFormInput.vue'
+import { AscensionMaterialType } from '@/models/AscensionMaterialType'
+import { useAscensionMaterialTypesStore } from '@/stores/ascension_material_types/index'
 import ConfirmDeleteDialog from '@/components/inputs/ConfirmDeleteDialog.vue'
 import DataTable from '@/components/DataTable.vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 
-const store$ = useWeaponTypesStore()
+const store$ = useAscensionMaterialTypesStore()
 let headers: Array<any> = [
-    { text: 'Icon', value: 'icon' },
     { text: 'Name', value: 'name', sortable: true },
     { text: 'Actions', value: 'actions', class: 'text-right' },
 ]
-let items: Ref<Array<WeaponType>> = computed(() => {
-    return store$.weapon_types
+let items: Ref<Array<AscensionMaterialType>> = computed(() => {
+    return store$.ascension_material_types
 })
 
 let loading = ref(false)
@@ -104,7 +98,7 @@ let search: Ref<string> = ref("")
 
 // Data Form
 let form_dialog = ref(false)
-let actual_model: WeaponType = reactive(new WeaponType())
+let actual_model: AscensionMaterialType = reactive(new AscensionMaterialType())
 let setActualModel = function(element: any){
     v$.value.actual_model.name.$reset()
     actual_model.fill(element)
@@ -132,21 +126,21 @@ let handleFormSubmit = async function () {
         form_dialog.value = false
         loading.value = true
         if(actual_model.id == null){
-            store$.store(new WeaponType(actual_model)).then((response: any) => {
+            store$.store(new AscensionMaterialType(actual_model)).then((response: any) => {
                 loading.value = false
             })
         } else {
-            store$.update(new WeaponType(actual_model)).then((response: any) => {
+            store$.update(new AscensionMaterialType(actual_model)).then((response: any) => {
                 loading.value = false
             })
         }
     }
 }
 let updateModelStore = function (element: any) {
-    store$.udpateStoreElement(new WeaponType(element))
+    store$.udpateStoreElement(new AscensionMaterialType(element))
 }
 
-// Delete WeaponType
+// Delete AscensionMaterialType
 let delete_dialog = ref(false)
 let showDeleteDialog = function (element: any) {
     setActualModel(element)
@@ -155,7 +149,7 @@ let showDeleteDialog = function (element: any) {
 let handleDeleteSubmit = function () {
     delete_dialog.value = false
     loading.value = true
-    store$.delete(new WeaponType(actual_model)).then((response: any) => {
+    store$.delete(new AscensionMaterialType(actual_model)).then((response: any) => {
         loading.value = false
     })
 }

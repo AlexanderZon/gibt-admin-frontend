@@ -2,6 +2,12 @@
 import Index from '@/pages/Index.vue'
 import Home from '@/pages/Home/Index.vue'
 
+import AscensionMaterialTypes from '@/pages/AscensionMaterialTypes/Index.vue'
+import AscensionMaterialTypesList from '@/pages/AscensionMaterialTypes/List.vue'
+
+import AscensionMaterials from '@/pages/AscensionMaterials/Index.vue'
+import AscensionMaterialsList from '@/pages/AscensionMaterials/List.vue'
+
 import Associations from '@/pages/Associations/Index.vue'
 import AssociationsList from '@/pages/Associations/List.vue'
 
@@ -26,6 +32,12 @@ import { createRouter, createWebHashHistory} from 'vue-router'
 const routes = [
     { path: '/', component: Index, children: [
         { path: '', name: 'home', component: Home },
+        { path: 'ascension_materials', component: AscensionMaterials, children: [
+            { path: '', name: 'ascension_materials', component: AscensionMaterialsList }
+        ] },
+        { path: 'ascension_material_types', component: AscensionMaterialTypes, children: [
+            { path: '', name: 'ascension_material_types', component: AscensionMaterialTypesList }
+        ] },
         { path: 'associations', component: Associations, children: [
             { path: '', name: 'associations', component: AssociationsList }
         ] },
