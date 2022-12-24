@@ -5,22 +5,19 @@
                 <!-- <template v-slot:prepend>
                 <v-btn icon="$menu"></v-btn>
                 </template> -->
-
                 <v-toolbar-title class="text-h6 pl-3">
                     Ascension Materials
                 </v-toolbar-title>
                 <v-text-field class="mr-2" label="Search" v-model="search" required hide-details density="compact"
                     variant="filled" append-inner-icon="mdi-magnify"></v-text-field>
-
                 <template v-slot:append>
-
                     <v-btn variant="plain" icon="mdi-plus" @click="showFormDialog({})"></v-btn>
                 </template>
             </v-toolbar>
             <v-card-text>
                 <DataTable :items="items" :headers="headers" :search="search">
                     <template #item.icon="{ item }">
-                        <PictureFormInput :picture="item.icon" :width="50" :url="`${store$.$base_url}/${item.id}/picture`"
+                        <PictureFormInput :picture="item.icon" :width="'50'" :url="`${store$.$base_url}/${item.id}/picture`"
                             @update="updateModelStore"></PictureFormInput>
                     </template>
                     <template #item.name="{ item }">
@@ -81,21 +78,12 @@
                                     v-model="actual_model.description"></v-text-field>
                             </v-col>
                             <v-col cols="12">
-                                <v-combobox
+                                <MultipleCombobox
                                     v-model="actual_model.ascension_material_types"
                                     :items="ascension_material_types"
                                     label="Select a Ascension Material Type"
                                     item-title="name"
-                                    item-value="id"
-                                    multiple
-                                    clearable
-                                ></v-combobox>
-                                <!-- <v-text-field ref="actualModelDescription" label="Description"
-                                    :error="v$.actual_model.description.$dirty && v$.actual_model.description.$error"
-                                    :rules="[
-                                        !v$.actual_model.description.required.$invalid || 'This field is required',
-                                    ]"
-                                    v-model="actual_model.description"></v-text-field> -->
+                                    item-value="id"></MultipleCombobox>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -130,6 +118,7 @@ import { AscensionMaterialType } from '@/models/AscensionMaterialType'
 import { useAscensionMaterialsStore } from '@/stores/ascension_materials/index'
 import PictureFormInput from '@/components/inputs/PictureFormInput.vue'
 import ConfirmDeleteDialog from '@/components/inputs/ConfirmDeleteDialog.vue'
+import MultipleCombobox from '@/components/inputs/MultipleCombobox.vue'
 import DataTable from '@/components/DataTable.vue'
 import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
@@ -180,6 +169,7 @@ let handleFormSubmit = async function () {
     v$.value.actual_model.$validate();
 
     if (!v$.value.actual_model.$error) {
+        console.log('closeDialog')
         form_dialog.value = false
         loading.value = true
         if(actual_model.id == null){
@@ -187,7 +177,6 @@ let handleFormSubmit = async function () {
                 loading.value = false
             })
         } else {
-            console.log('Actual Model: ', actual_model)
             store$.update(new AscensionMaterial(actual_model)).then((response: any) => {
                 loading.value = false
             })
@@ -222,6 +211,4 @@ onMounted(() => {
 
     })
 })
-
-
 </script>
