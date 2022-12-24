@@ -26,7 +26,7 @@ export class AscensionMaterial {
                 let ascension_material_type = new AscensionMaterialType(_ascenstion_material_type)
                 this.ascension_material_types.push(ascension_material_type)
                 this.ascension_material_typeables.push(ascension_material_type.id)
-            });
+            })
         }
     }
 }

@@ -29,7 +29,7 @@ export const useAscensionMaterialsStore = defineStore('ascension_materials', {
         },
         async store(ascension_material: AscensionMaterial) {
             const response = await window.api.post(`${base}`, ascension_material)
-            this.ascension_materials.push(new AscensionMaterial(response.data.data))
+            this.ascension_materials.unshift(new AscensionMaterial(response.data.data))
         },
         async edit(ascension_material: AscensionMaterial) {
 
