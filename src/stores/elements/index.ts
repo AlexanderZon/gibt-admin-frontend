@@ -31,7 +31,7 @@ export const useElementsStore = defineStore('elements', {
         },
         async update(element: Element) {
             const response = await window.api.put(`${base}/${element.id}`, element)
-            this.udpateStoreElement(new Element(response.data.data))
+            this.updateStoreElement(new Element(response.data.data))
         },
         async delete(element: Element) {
             const response = await window.api.delete(`${base}/${element.id}`, element)
@@ -43,9 +43,9 @@ export const useElementsStore = defineStore('elements', {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.udpateStoreElement(new Element(response.data.data))
+            this.updateStoreElement(new Element(response.data.data))
         },
-        udpateStoreElement(element: Element) {
+        updateStoreElement(element: Element) {
             let _element:Element|undefined = this.elements.find((_element: Element) => {
                 return (_element.id == element.id)
             })

@@ -143,7 +143,7 @@ let handleFormSubmit = async function () {
     }
 }
 let updateModelStore = function (element: any) {
-    store$.udpateStoreElement(new WeaponType(element))
+    store$.updateStoreElement(new WeaponType(element))
 }
 
 // Delete WeaponType

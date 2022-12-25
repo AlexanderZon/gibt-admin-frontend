@@ -13,11 +13,9 @@
 
         <Menu v-model="drawer" />
         <v-main>
-            <v-container transition="scroll-y-transition">
+            <v-container>
                 <router-view v-slot="{ Component, route }">
-                    <transition name="bounce">
-                        <component :is="Component" :key="route.path" />
-                    </transition>
+                    <component :is="Component" :key="route.path" />
                 </router-view>
             </v-container>
         </v-main>

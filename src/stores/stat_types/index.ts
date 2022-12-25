@@ -31,7 +31,7 @@ export const useStatTypesStore = defineStore('stat_types', {
         },
         async update(stat_type: StatType) {
             const response = await window.api.put(`${base}/${stat_type.id}`, stat_type)
-            this.udpateStoreElement(new StatType(response.data.data))
+            this.updateStoreElement(new StatType(response.data.data))
         },
         async delete(stat_type: StatType) {
             const response = await window.api.delete(`${base}/${stat_type.id}`, stat_type)
@@ -43,9 +43,9 @@ export const useStatTypesStore = defineStore('stat_types', {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.udpateStoreElement(new StatType(response.data.data))
+            this.updateStoreElement(new StatType(response.data.data))
         },
-        udpateStoreElement(stat_type: StatType) {
+        updateStoreElement(stat_type: StatType) {
             let element:StatType|undefined = this.stat_types.find((element: StatType) => {
                 return (element.id == stat_type.id)
             })

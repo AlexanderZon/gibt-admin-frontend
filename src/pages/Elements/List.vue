@@ -143,7 +143,7 @@ let handleFormSubmit = async function () {
     }
 }
 let updateModelStore = function (_element: any) {
-    store$.udpateStoreElement(new Element(_element))
+    store$.updateStoreElement(new Element(_element))
 }
 
 // Delete Element

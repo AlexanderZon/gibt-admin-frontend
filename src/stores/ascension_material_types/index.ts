@@ -31,7 +31,7 @@ export const useAscensionMaterialTypesStore = defineStore('ascension_material_ty
         },
         async update(ascension_materia_type: AscensionMaterialType) {
             const response = await window.api.put(`${base}/${ascension_materia_type.id}`, ascension_materia_type)
-            this.udpateStoreElement(new AscensionMaterialType(response.data.data))
+            this.updateStoreElement(new AscensionMaterialType(response.data.data))
         },
         async delete(ascension_materia_type: AscensionMaterialType) {
             const response = await window.api.delete(`${base}/${ascension_materia_type.id}`, ascension_materia_type)
@@ -43,9 +43,9 @@ export const useAscensionMaterialTypesStore = defineStore('ascension_material_ty
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.udpateStoreElement(new AscensionMaterialType(response.data.data))
+            this.updateStoreElement(new AscensionMaterialType(response.data.data))
         },
-        udpateStoreElement(ascension_materia_type: AscensionMaterialType) {
+        updateStoreElement(ascension_materia_type: AscensionMaterialType) {
             let element:AscensionMaterialType|undefined = this.ascension_material_types.find((element: AscensionMaterialType) => {
                 return (element.id == ascension_materia_type.id)
             })

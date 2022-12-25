@@ -24,7 +24,13 @@
                 </div>
                 <div class="v-list-item__content" data-no-activator="">
                     <div class="v-list-item-title">{{ item.title }}</div><!----><!---->
-                </div><!---->
+                </div>
+                <div class="v-list-item__append" v-if="itemIcon != null">
+                    <v-lazy
+                        transition="fade-transition">
+                        <v-img class="bg-white" width="20" :aspect-ratio="1" :src="item.value[itemIcon]" cover></v-img>
+                    </v-lazy>
+                </div>
             </div>
             <div class="v-list-item v-list-item--active v-list-item--link v-theme--light v-list-item--density-default v-list-item--one-line v-list-item--variant-text" tabindex="0" v-else>
                 <span class="v-list-item__overlay"></span>
@@ -41,20 +47,27 @@
                 </div>
                 <div class="v-list-item__content" data-no-activator="">
                     <div class="v-list-item-title">{{ item.title }}</div><!----><!---->
-                </div><!---->
+                </div>
+                <div class="v-list-item__append" v-if="itemIcon != null">
+                    <v-lazy
+                        transition="fade-transition">
+                        <v-img class="bg-white" width="20" :aspect-ratio="1" :src="item.value[itemIcon]" cover></v-img>
+                    </v-lazy>
+                </div>
             </div>
         </template>
     </v-combobox>
 </template>
 
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref, PropType } from 'vue'
     const props = defineProps({
         modelValue: { type: Array, required: true },
         items: { type: Array, required: true },
         label: { type: String, default: '' },
         itemTitle: { type: String, default: 'title' },
         itemValue: { type: String, default: 'value' },
+        itemIcon: { type: String as PropType<string|null>, default: null },
         clearable: { type: Boolean, default: false },
     })
     const emit = defineEmits(['update:modelValue'])

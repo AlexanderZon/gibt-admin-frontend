@@ -13,6 +13,7 @@ import AssociationsList from '@/pages/Associations/List.vue'
 
 import Characters from '@/pages/Characters/Index.vue'
 import CharactersList from '@/pages/Characters/List.vue'
+import CharactersForm from '@/pages/Characters/Form.vue'
 
 import Elements from '@/pages/Elements/Index.vue'
 import ElementsList from '@/pages/Elements/List.vue'
@@ -42,6 +43,8 @@ const routes = [
             { path: '', name: 'associations', component: AssociationsList }
         ] },
         { path: 'characters', component: Characters, children: [
+            { path: ':id/edit', name: 'characters/edit', component: CharactersForm },
+            { path: 'create', name: 'characters/create', component: CharactersForm },
             { path: '', name: 'characters', component: CharactersList }
         ] },
         { path: 'elements', component: Elements, children: [

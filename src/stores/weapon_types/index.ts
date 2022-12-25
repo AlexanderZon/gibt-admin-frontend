@@ -31,7 +31,7 @@ export const useWeaponTypesStore = defineStore('weapon_types', {
         },
         async update(weapon_type: WeaponType) {
             const response = await window.api.put(`${base}/${weapon_type.id}`, weapon_type)
-            this.udpateStoreElement(new WeaponType(response.data.data))
+            this.updateStoreElement(new WeaponType(response.data.data))
         },
         async delete(weapon_type: WeaponType) {
             const response = await window.api.delete(`${base}/${weapon_type.id}`, weapon_type)
@@ -43,9 +43,9 @@ export const useWeaponTypesStore = defineStore('weapon_types', {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.udpateStoreElement(new WeaponType(response.data.data))
+            this.updateStoreElement(new WeaponType(response.data.data))
         },
-        udpateStoreElement(weapon_type: WeaponType) {
+        updateStoreElement(weapon_type: WeaponType) {
             let element:WeaponType|undefined = this.weapon_types.find((element: WeaponType) => {
                 return (element.id == weapon_type.id)
             })

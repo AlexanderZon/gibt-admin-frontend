@@ -184,7 +184,7 @@ let handleFormSubmit = async function () {
     }
 }
 let updateModelStore = function (element: any) {
-    store$.udpateStoreElement(new AscensionMaterial(element))
+    store$.updateStoreElement(new AscensionMaterial(element))
 }
 
 // Delete AscensionMaterial

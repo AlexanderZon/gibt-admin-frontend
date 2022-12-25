@@ -142,7 +142,7 @@ let handleFormSubmit = async function () {
     }
 }
 let updateModelStore = function (element: any) {
-    store$.udpateStoreElement(new Vision(element))
+    store$.updateStoreElement(new Vision(element))
 }
 
 // Delete Vision

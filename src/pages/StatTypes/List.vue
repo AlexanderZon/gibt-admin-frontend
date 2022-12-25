@@ -149,7 +149,7 @@ let handleFormSubmit = async function () {
     }
 }
 let updateModelStore = function (element: any) {
-    store$.udpateStoreElement(new StatType(element))
+    store$.updateStoreElement(new StatType(element))
 }
 
 // Delete StatType

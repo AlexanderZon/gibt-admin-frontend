@@ -31,7 +31,7 @@ export const useVisionsStore = defineStore('visions', {
         },
         async update(vision: Vision) {
             const response = await window.api.put(`${base}/${vision.id}`, vision)
-            this.udpateStoreElement(new Vision(response.data.data))
+            this.updateStoreElement(new Vision(response.data.data))
         },
         async delete(vision: Vision) {
             const response = await window.api.delete(`${base}/${vision.id}`, vision)
@@ -43,9 +43,9 @@ export const useVisionsStore = defineStore('visions', {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.udpateStoreElement(new Vision(response.data.data))
+            this.updateStoreElement(new Vision(response.data.data))
         },
-        udpateStoreElement(vision: Vision) {
+        updateStoreElement(vision: Vision) {
             let element:Vision|undefined = this.visions.find((element: Vision) => {
                 return (element.id == vision.id)
             })

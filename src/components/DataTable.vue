@@ -15,7 +15,7 @@
             <tbody>
                 <tr v-for="(item, index) in filtered_items">
                     <td v-for="header in headers" :class="header.class">
-                        <slot :name="`item.${header.value}`" v-bind="{ item: item }"></slot>
+                        <slot :name="`item.${header.value}`" v-bind="new PropItem(item)"></slot>
                     </td>
                 </tr>
             </tbody>
@@ -27,6 +27,13 @@
     import { ref, computed, onMounted } from 'vue'
     import type { Ref } from 'vue'
     import { PropType } from 'vue'
+
+    class PropItem { 
+        item: any
+        constructor(prop_item: any){
+            this.item = prop_item
+        }
+    }
 
     class Header {
         text: string

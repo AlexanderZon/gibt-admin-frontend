@@ -31,7 +31,7 @@ export const useAssociationsStore = defineStore('associations', {
         },
         async update(association: Association) {
             const response = await window.api.put(`${base}/${association.id}`, association)
-            this.udpateStoreElement(new Association(response.data.data))
+            this.updateStoreElement(new Association(response.data.data))
         },
         async delete(association: Association) {
             const response = await window.api.delete(`${base}/${association.id}`, association)
@@ -43,9 +43,9 @@ export const useAssociationsStore = defineStore('associations', {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.udpateStoreElement(new Association(response.data.data))
+            this.updateStoreElement(new Association(response.data.data))
         },
-        udpateStoreElement(association: Association) {
+        updateStoreElement(association: Association) {
             let element:Association|undefined = this.associations.find((element: Association) => {
                 return (element.id == association.id)
             })

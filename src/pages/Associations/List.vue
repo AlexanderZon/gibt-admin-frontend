@@ -143,7 +143,7 @@ let handleFormSubmit = async function () {
     }
 }
 let updateModelStore = function (element: any) {
-    store$.udpateStoreElement(new Association(element))
+    store$.updateStoreElement(new Association(element))
 }
 
 // Delete Association
