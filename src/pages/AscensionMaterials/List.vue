@@ -35,12 +35,14 @@
                         </template>
                     </template>
                     <template #item.actions="{ item }">
-                        <v-btn color="amber" variant="plain" flat icon @click="showFormDialog(item)">
-                            <v-icon>mdi-pencil</v-icon>
-                        </v-btn>
-                        <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
-                            <v-icon>mdi-delete</v-icon>
-                        </v-btn>
+                        <span class="d-flex flex-row">
+                            <v-btn color="amber" variant="plain" flat icon @click="showFormDialog(item)">
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                        </span>
                     </template>
                 </DataTable>
             </v-card-text>

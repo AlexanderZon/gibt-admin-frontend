@@ -27,31 +27,39 @@
                         {{ item.description }}
                     </template>
                     <template #item.weapon_type.name="{ item }">
-                        <span v-if="item.weapon_type != null && item.weapon_type.icon != null">
-                            <img :src="item.weapon_type.icon" :alt="item.weapon_type.name" height="50">
+                        <span v-if="item.weapon_type != null && item.weapon_type.icon != null" class="d-flex flex-row">
+                            <v-lazy width="50">
+                                <v-img :src="item.weapon_type.icon" :alt="item.weapon_type.name" height="50"></v-img>
+                            </v-lazy>
                         </span>
                         <span v-else>-</span>
                     </template>
                     <template #item.element.name="{ item }">
-                        <span v-if="item.element != null && item.element.icon != null">
-                            <img :src="item.element.icon" :alt="item.element.name" height="50">
+                        <span v-if="item.element != null && item.element.icon != null" class="d-flex flex-row">
+                            <v-lazy width="50">
+                                <v-img :src="item.element.icon" :alt="item.element.name" height="50"></v-img>
+                            </v-lazy>
                         </span>
                         <span v-else>-</span>
                     </template>
                     <template #item.ascension_materials="{ item }">
-                        <div class="d-flex flex-row">
+                        <span class="d-flex flex-row">
                             <template v-for="(ascension_material, index) in item.ascension_materials">
-                                <v-img v-if="ascension_material != null && ascension_material.icon != null" :src="ascension_material.icon" :alt="ascension_material.name" height="50"></v-img>
+                                <v-lazy width="50" class="mr-2">
+                                    <v-img v-if="ascension_material != null && ascension_material.icon != null" :src="ascension_material.icon" :alt="ascension_material.name" height="50"></v-img>
+                                </v-lazy>
                             </template>
-                        </div>
+                        </span>
                     </template>
                     <template #item.actions="{ item }">
-                        <v-btn color="amber" variant="plain" flat icon router :to="{ name: 'characters/edit', params: { id: item.id }}">
-                            <v-icon>mdi-pencil</v-icon>
-                        </v-btn>
-                        <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
-                            <v-icon>mdi-delete</v-icon>
-                        </v-btn>
+                        <span class="d-flex flex-row justify-end">
+                            <v-btn color="amber" variant="plain" flat icon router :to="{ name: 'characters/edit', params: { id: item.id }}">
+                                <v-icon>mdi-pencil</v-icon>
+                            </v-btn>
+                            <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
+                                <v-icon>mdi-delete</v-icon>
+                            </v-btn>
+                        </span>
                     </template>
                 </DataTable>
             </v-card-text>

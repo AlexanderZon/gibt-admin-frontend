@@ -6,7 +6,9 @@
             </v-btn>
         </template>
         <template v-else>
-            <v-img class="bg-white" :width="width" :aspect-ratio="1" :src="picture" cover @click="showIconFormDialog"></v-img>
+            <v-lazy>
+                <v-img class="picture-uploader-container" :width="width" :aspect-ratio="aspectRatio" :src="picture" :cover="cover" @click="showIconFormDialog"></v-img>
+            </v-lazy>
         </template>
         
         <v-dialog v-model="icon_dialog" persistent max-width="500px">
@@ -43,18 +45,20 @@
 
 <script setup lang="ts">
     import type { Ref } from 'vue'
-    import { ref, computed } from 'vue'
+    import { ref, computed, PropType } from 'vue'
     import { useVuelidate } from '@vuelidate/core'
     import { requiredIf } from '@vuelidate/validators'
 
     const props = defineProps({
-        url: { type: String, required: true },
-        picture: { type: String, default: null },
+        url: { type: String as PropType<string|null>, default: null },
+        picture: { type: String as PropType<string|null>, default: null },
         loading: { type: Boolean, default: false },
-        width: { type: String, default: '50' }
+        width: { type: String, default: '50' },
+        aspectRatio: { type: String, default: '1' },
+        cover: { type: Boolean, default: false }
     })
     
-    const emit = defineEmits(['update'])
+    const emit = defineEmits(['update', 'upload'])
 
     let icon_dialog = ref(false)
     let component_loading = ref(false)
@@ -81,13 +85,25 @@
         if(!v$.value.files.$invalid){
             icon_dialog.value = false
             component_loading.value = true
-            const response = await window.api.post(`${props.url}`, { file: files.value[0] }, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            })
-            component_loading.value = false
-            emit('update', response.data.data)
+            if(props.url != null){
+                console.log('url: ', props.url)
+                const response = await window.api.post(`${props.url}`, { file: files.value[0] }, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                })
+                emit('update', response.data.data)
+                component_loading.value = false
+            } else {
+                console.log('upload')
+                emit('upload', files)
+            }
         }
     }
 </script>
+
+<style>
+    .picture-uploader-container {
+        cursor: pointer
+    }
+</style>

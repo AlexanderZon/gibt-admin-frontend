@@ -29,7 +29,7 @@
                 <div class="v-list-item__append" v-if="itemIcon != null">
                     <v-lazy
                         transition="fade-transition">
-                        <v-img width="20" :aspect-ratio="1" :src="item.value[itemIcon]" cover></v-img>
+                        <v-img width="35" :aspect-ratio="1" :src="item.value[itemIcon]"></v-img>
                     </v-lazy>
                 </div>
             </div>
@@ -52,7 +52,7 @@
                 <div class="v-list-item__append" v-if="itemIcon != null">
                     <v-lazy
                         transition="fade-transition">
-                        <v-img width="20" :aspect-ratio="1" :src="item.value[itemIcon]" cover></v-img>
+                        <v-img width="35" :aspect-ratio="1" :src="item.value[itemIcon]"></v-img>
                     </v-lazy>
                 </div>
             </div>
@@ -60,6 +60,7 @@
         <template v-slot:selection="data">
             <template v-if="multiple">
                 <v-chip
+                  class="ma-1"
                   :key="JSON.stringify(data.item)"
                   v-bind="data.attrs"
                   :model-value="data.selected"
@@ -72,6 +73,7 @@
                         v-if="itemIcon != null"
                         class="bg-accent text-uppercase"
                         start
+                        size="35"
                         :image="data.item.value[itemIcon]">{{ data.item.title.slice(0, 1) }}</v-avatar>
                   </template>
                   {{ data.item.value[itemTitle] }}
@@ -79,7 +81,7 @@
             </template>
             <template v-else>
                 <span class="autocomplete-selection-container">
-                    <img v-if="itemIcon != null" class="mr-2 autocomplete-selection-image" :src="data.item.value[itemIcon]" width="20"/>
+                    <img v-if="itemIcon != null" class="mr-2 autocomplete-selection-image" :src="data.item.value[itemIcon]" width="35"/>
                     {{ data.item.value[itemTitle] }}
                 </span>
             </template>
@@ -150,7 +152,7 @@
         display: flex
     }
     .autocomplete-selection-container > .autocomplete-selection-image {
-        height: 20px;
+        height: 35px;
         width: min-content;
     }
 </style>

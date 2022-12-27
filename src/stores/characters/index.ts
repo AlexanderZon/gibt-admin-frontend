@@ -45,16 +45,16 @@ export const useCharactersStore = defineStore('characters', {
             this.updateStoreElement(new Character(response.data.data))
         },
         async delete(character: Character) {
-            const response = await window.api.delete(`${base}/${character.id}`, character)
+            const response = await window.api.delete(`${base}/${character.id}`)
             this.deleteStoreElement(new Character(response.data.data))
         },
-        async picture(character: Character, files: File[]) {
-            const response = await window.api.post(`${base}/${character.id}/picture`, { file: files[0] }, {
+        async picture(character: Character, files: File[], type: string) {
+            const response = await window.api.post(`${base}/${character.id}/picture?type=${type}`, { file: files[0] }, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }
             })
-            this.updateStoreElement(new Character(response.data.data))
+            return new Character(response.data.data)
         },
         updateStoreElement(character: Character) {
             let element:Character|undefined = this.characters.find((element: Character) => {

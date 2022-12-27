@@ -3,7 +3,7 @@ import { AscensionMaterialType } from "./AscensionMaterialType";
 export class AscensionMaterial {
     id: number;
     name: string;
-    rarity: string;
+    rarity: number;
     description: string;
     icon: string;
     order: number;

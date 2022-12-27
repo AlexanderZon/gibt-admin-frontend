@@ -1,8 +1,9 @@
-import { AscensionMaterial } from "./AscensionMaterial";
-import { Element } from "./Element";
-import { Vision } from "./Vision";
-import { WeaponType } from "./WeaponType";
-import { Association } from "./Association";
+import { AscensionMaterial } from "@/models/AscensionMaterial";
+import { Element } from "@/models/Element";
+import { Vision } from "@/models/Vision";
+import { WeaponType } from "@/models/WeaponType";
+import { Association } from "@/models/Association";
+import { Stat as CharacterStat } from "@/models/Character/Stat";
 
 export class Character {
     id: number;
@@ -18,11 +19,16 @@ export class Character {
     vision: Vision|null;
     association: Association|null;
     weapon_type: WeaponType|null;
+    released: boolean;
     ascension_materials: Array<AscensionMaterial>
     ascension_materialables: Array<number>
     skill_ascension_materials: Array<AscensionMaterial>
     skill_ascension_materialables: Array<number>
-    released: boolean;
+    character_stats: Array<CharacterStat>
+    icon: string|null;
+    side_icon: string|null;
+    gacha_card: string|null;
+    gacha_splash: string|null;
     constructor(data: any = {}) {
         this.fill(data)
     }
@@ -40,6 +46,9 @@ export class Character {
         this.vision = typeof data.vision !== 'undefined' && data.vision != null ? new Vision(data.vision) : null
         this.association = typeof data.association !== 'undefined' && data.association != null ? new Association(data.association) : null
         this.weapon_type = typeof data.weapon_type !== 'undefined' && data.weapon_type != null ? new WeaponType(data.weapon_type) : null
+        this.released = typeof data.released !== 'undefined' ? data.released : false;
+
+        // Ascension Materials
         this.ascension_materials = []
         this.ascension_materialables = []
         if(typeof data.ascension_materials !== undefined && data.ascension_materials != null){
@@ -49,6 +58,8 @@ export class Character {
                 this.ascension_materialables.push(ascension_material.id)
             })
         }
+
+        // Skill Ascension Materials
         this.skill_ascension_materials = []
         this.skill_ascension_materialables = []
         if(typeof data.skill_ascension_materials !== undefined && data.skill_ascension_materials != null){
@@ -58,6 +69,32 @@ export class Character {
                 this.skill_ascension_materialables.push(skill_ascension_material.id)
             })
         }
-        this.released = typeof data.released !== 'undefined' ? data.released : false;
+
+        // Stats
+        this.character_stats = []
+        if(typeof data.character_stats !== undefined && data.character_stats != null){
+            data.character_stats.forEach((_character_stat:any) => {
+                let character_stat = new CharacterStat(_character_stat)
+                this.character_stats.push(character_stat)
+            })
+        }
+        
+        // GALLERY
+        // Icon
+        if(typeof data.icon !== 'undefined' && data.icon != null) this.icon = data.icon
+        else if(typeof data.character_icon !== 'undefined' && data.character_icon != null) this.icon = data.character_icon.url
+        else this.icon = null
+        // Side Icon
+        if(typeof data.side_icon !== 'undefined' && data.side_icon != null) this.side_icon = data.side_icon
+        else if(typeof data.character_side_icon !== 'undefined' && data.character_side_icon != null) this.side_icon = data.character_side_icon.url
+        else this.side_icon = null
+        // Gacha Card
+        if(typeof data.gacha_card !== 'undefined' && data.gacha_card != null) this.gacha_card = data.gacha_card
+        else if(typeof data.character_gacha_card !== 'undefined' && data.character_gacha_card != null) this.gacha_card = data.character_gacha_card.url
+        else this.gacha_card = null
+        // Gacha Splash
+        if(typeof data.gacha_splash !== 'undefined' && data.gacha_splash != null) this.gacha_splash = data.gacha_splash
+        else if(typeof data.character_gacha_splash !== 'undefined' && data.character_gacha_splash != null) this.gacha_splash = data.character_gacha_splash.url
+        else this.gacha_splash = null
     }
 }

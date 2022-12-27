@@ -13,20 +13,27 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(item, index) in filtered_items">
+                <tr v-for="(item, index) in visibleItems">
                     <td v-for="header in headers" :class="header.class">
                         <slot :name="`item.${header.value}`" v-bind="new PropItem(item)"></slot>
                     </td>
                 </tr>
             </tbody>
         </v-table>
+        
+        <template v-if="!hideFooter">
+            <slot :name="`pagination`" v-bind="{ page: page, length: paginationLength }">
+                <v-pagination v-model="page" :length="paginationLength"></v-pagination>
+            </slot>
+        </template>
     </div>
 </template>
 
 <script setup lang="ts">
     import { ref, computed, onMounted } from 'vue'
-    import type { Ref } from 'vue'
+    import type { Ref,ComputedRef } from 'vue'
     import { PropType } from 'vue'
+    import { Pagination } from '@/types/Pagination'
 
     class PropItem { 
         item: any
@@ -42,7 +49,6 @@
         filterable: boolean
         sortable: boolean
         constructor(header: any){
-            console.log('header')
             this.text = header.text
             this.value = header.value
             this.class = null
@@ -51,26 +57,18 @@
         }
     }
 
-    class Pagination {
-        sortBy: string|null
-        descending: boolean
-        constructor(pagination: any){
-            this.sortBy = (typeof pagination.sortBy !== 'undefined') ? pagination.sortBy : null
-            this.descending = (typeof pagination.descending !== 'undefined') ? pagination.descending : false
-        }
-    }
-
     const props = defineProps({
         items: { type: Array, required: true },
         headers: { type: Array as PropType<Header[]> },
         search: { type: String, default: null },
-        pagination: { type: Object as PropType<Pagination>, default: () => {} }
+        pagination: { type: Object as PropType<Pagination>, default: () => { return new Pagination({}) } },
+        hideFooter: { type: Boolean, default: false }
     })
 
     let sort_by_field: Ref<string|null> = ref(null)
     let is_descendant_sort: Ref<boolean> = ref(false)
 
-    const filtered_items = computed(() => {
+    const filteredItems = computed(() => {
         if(props.items.length > 0){
             return props.items.filter((item: any) => {
                 if(props.search != null && item.name.toLocaleUpperCase().indexOf(props.search.toLocaleUpperCase()) == -1) return false
@@ -86,6 +84,27 @@
             })
         } else {
             return []
+        }
+    })
+
+    let page: Ref<number> = ref(1)
+
+    const visibleItems = computed(() => {
+        if(props.pagination.itemsPerPage > 0){
+            if(filteredItems.value.length >= page.value*props.pagination.itemsPerPage)
+                return filteredItems.value.slice((page.value-1)*props.pagination.itemsPerPage, page.value*props.pagination.itemsPerPage)
+            else 
+            return filteredItems.value.slice((page.value-1)*props.pagination.itemsPerPage, filteredItems.value.length)
+        } else {
+            return filteredItems.value
+        }
+    })
+
+    const paginationLength: ComputedRef<number> = computed(() => {
+        if(props.pagination.itemsPerPage > 0){
+            return Math.ceil(filteredItems.value.length/props.pagination.itemsPerPage)
+        } else {
+            return 1
         }
     })
 
