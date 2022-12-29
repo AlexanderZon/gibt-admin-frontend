@@ -4,6 +4,7 @@ import { Vision } from "@/models/Vision";
 import { WeaponType } from "@/models/WeaponType";
 import { Association } from "@/models/Association";
 import { Stat as CharacterStat } from "@/models/Character/Stat";
+import { SkillAscension as CharacterSkillAscension } from "@/models/Character/SkillAscension";
 
 export class Character {
     id: number;
@@ -25,6 +26,7 @@ export class Character {
     skill_ascension_materials: Array<AscensionMaterial>
     skill_ascension_materialables: Array<number>
     character_stats: Array<CharacterStat>
+    character_skill_ascensions: Array<CharacterSkillAscension>
     icon: string|null;
     side_icon: string|null;
     gacha_card: string|null;
@@ -76,6 +78,15 @@ export class Character {
             data.character_stats.forEach((_character_stat:any) => {
                 let character_stat = new CharacterStat(_character_stat)
                 this.character_stats.push(character_stat)
+            })
+        }
+
+        // Skills
+        this.character_skill_ascensions = []
+        if(typeof data.character_skill_ascensions !== undefined && data.character_skill_ascensions != null){
+            data.character_skill_ascensions.forEach((_character_skill_ascension:any) => {
+                let character_skill_ascension = new CharacterSkillAscension(_character_skill_ascension)
+                this.character_skill_ascensions.push(character_skill_ascension)
             })
         }
         

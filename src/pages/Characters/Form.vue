@@ -165,8 +165,11 @@
             <v-col cols="12">
                 <CharacterGallery v-model="actual_model"></CharacterGallery>
             </v-col>
-            <v-col cols="12">
+            <v-col cols="8">
                 <CharacterStats v-model="actual_model"></CharacterStats>
+            </v-col>
+            <v-col cols="4">
+                <CharacterSkills v-model="actual_model"></CharacterSkills>
             </v-col>
         </template>
     </v-row>
@@ -189,6 +192,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { AscensionMaterialType } from '@/models/AscensionMaterialType'
 import CharacterGallery from './Form/Gallery.vue'
 import CharacterStats from './Form/Stats.vue'
+import CharacterSkills from './Form/Skills.vue'
 
 const store$ = useCharactersStore()
 const route = useRoute()
