@@ -12,8 +12,8 @@ export default defineConfig({
     rollupOptions: {
       external: [
         /(?!.*\.icon\.svg$)^.+\.svg$/,
-      ]
-    }
+      ],
+    },
   },
   plugins: [
     vue({
@@ -39,6 +39,7 @@ export default defineConfig({
       '.tsx',
       '.vue',
     ],
+    preserveSymlinks: true
   },
   server: {
     port: 3000,

@@ -18,7 +18,6 @@ export class SkillAscension {
         this.fill(data)
     }
     fill(data: any = {}){
-        console.log('character stat: ', data)
         this.id = data.id;
         this.level = data.level;
         this.character = typeof data.character !== 'undefined' && data.character != null ? new Character(data.character) : null

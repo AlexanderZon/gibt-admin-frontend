@@ -90,19 +90,23 @@
     let page: Ref<number> = ref(1)
 
     const visibleItems = computed(() => {
+        let length = filteredItems.value.length
         if(props.pagination.itemsPerPage > 0){
-            if(filteredItems.value.length >= page.value*props.pagination.itemsPerPage)
+            if(length >= page.value*props.pagination.itemsPerPage){
                 return filteredItems.value.slice((page.value-1)*props.pagination.itemsPerPage, page.value*props.pagination.itemsPerPage)
-            else 
-            return filteredItems.value.slice((page.value-1)*props.pagination.itemsPerPage, filteredItems.value.length)
+            }
+            else {
+                return filteredItems.value.slice((page.value-1)*props.pagination.itemsPerPage, length)
+            }
         } else {
             return filteredItems.value
         }
     })
 
     const paginationLength: ComputedRef<number> = computed(() => {
+        let length = filteredItems.value.length
         if(props.pagination.itemsPerPage > 0){
-            return Math.ceil(filteredItems.value.length/props.pagination.itemsPerPage)
+            return Math.ceil(length/props.pagination.itemsPerPage)
         } else {
             return 1
         }

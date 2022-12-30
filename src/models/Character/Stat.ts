@@ -26,7 +26,6 @@ export class Stat {
         this.fill(data)
     }
     fill(data: any = {}){
-        console.log('character stat: ', data)
         this.id = data.id;
         this.level = data.level;
         this.hp = data.hp;

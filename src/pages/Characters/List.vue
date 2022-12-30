@@ -12,7 +12,7 @@
                 </template>
             </v-toolbar>
             <v-card-text>
-                <DataTable :items="items" :headers="headers" :search="search">
+                <DataTable :items="items" :headers="headers" :search="search" :pagination="pagination">
                     <template #item.icon="{ item }">
                         <PictureFormInput :picture="item.icon" :width="'50'" :url="`${store$.$base_url}/${item.id}/picture`"
                             @update="updateModelStore"></PictureFormInput>
@@ -51,6 +51,15 @@
                             </template>
                         </span>
                     </template>
+                    <template #item.skill_ascension_materials="{ item }">
+                        <span class="d-flex flex-row">
+                            <template v-for="(skill_ascension_material, index) in item.skill_ascension_materials">
+                                <v-lazy width="50" class="mr-2">
+                                    <v-img v-if="skill_ascension_material != null && skill_ascension_material.icon != null" :src="skill_ascension_material.icon" :alt="skill_ascension_material.name" height="50"></v-img>
+                                </v-lazy>
+                            </template>
+                        </span>
+                    </template>
                     <template #item.actions="{ item }">
                         <span class="d-flex flex-row justify-end">
                             <v-btn color="amber" variant="plain" flat icon router :to="{ name: 'characters/edit', params: { id: item.id }}">
@@ -83,6 +92,7 @@ import { useCharactersStore } from '@/stores/characters/index'
 import PictureFormInput from '@/components/inputs/PictureFormInput.vue'
 import ConfirmDeleteDialog from '@/components/inputs/ConfirmDeleteDialog.vue'
 import DataTable from '@/components/DataTable.vue'
+import { Pagination } from '@/types/Pagination'
 
 const store$ = useCharactersStore()
 let headers: Array<any> = [
@@ -92,8 +102,10 @@ let headers: Array<any> = [
     { text: 'Weapon', value: 'weapon_type.name', sortable: true },
     { text: 'Element', value: 'element.name', sortable: true },
     { text: 'Ascension Materials', value: 'ascension_materials', sortable: true },
+    { text: 'Skill Ascension Materials', value: 'skill_ascension_materials', sortable: true },
     { text: 'Actions', value: 'actions', class: 'text-right' },
 ]
+let pagination = new Pagination({ itemsPerPage: -1 })
 let items: Ref<Array<Character>> = computed(() => {
     return store$.characters
 })
