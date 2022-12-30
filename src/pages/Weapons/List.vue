@@ -3,12 +3,12 @@
         <v-card>
             <v-toolbar>
                 <v-toolbar-title class="text-h6 pl-3">
-                    Characters
+                    Weapons
                 </v-toolbar-title>
                 <v-text-field class="mr-2" label="Search" v-model="search" required hide-details density="compact"
                     variant="filled" append-inner-icon="mdi-magnify"></v-text-field>
                 <template v-slot:append>
-                    <v-btn variant="plain" icon="mdi-plus" @click="$router.push({ name: 'characters/create' })"></v-btn>
+                    <v-btn variant="plain" icon="mdi-plus" @click="$router.push({ name: 'weapons/create' })"></v-btn>
                 </template>
             </v-toolbar>
             <v-card-text>
@@ -34,14 +34,6 @@
                         </span>
                         <span v-else>-</span>
                     </template>
-                    <template #item.element.name="{ item }">
-                        <span v-if="item.element != null && item.element.icon != null" class="d-flex flex-row">
-                            <v-lazy width="50">
-                                <v-img :src="item.element.icon" :alt="item.element.name" height="50"></v-img>
-                            </v-lazy>
-                        </span>
-                        <span v-else>-</span>
-                    </template>
                     <template #item.ascension_materials="{ item }">
                         <span class="d-flex flex-row">
                             <template v-for="(ascension_material, index) in item.ascension_materials">
@@ -51,18 +43,9 @@
                             </template>
                         </span>
                     </template>
-                    <template #item.skill_ascension_materials="{ item }">
-                        <span class="d-flex flex-row">
-                            <template v-for="(skill_ascension_material, index) in item.skill_ascension_materials">
-                                <v-lazy width="50" class="mr-2">
-                                    <v-img v-if="skill_ascension_material != null && skill_ascension_material.icon != null" :src="skill_ascension_material.icon" :alt="skill_ascension_material.name" height="50"></v-img>
-                                </v-lazy>
-                            </template>
-                        </span>
-                    </template>
                     <template #item.actions="{ item }">
                         <span class="d-flex flex-row justify-end">
-                            <v-btn color="amber" variant="plain" flat icon router :to="{ name: 'characters/edit', params: { id: item.id }}">
+                            <v-btn color="amber" variant="plain" flat icon router :to="{ name: 'weapons/edit', params: { id: item.id }}">
                                 <v-icon>mdi-pencil</v-icon>
                             </v-btn>
                             <v-btn color="red" variant="plain" flat icon @click="showDeleteDialog(item)">
@@ -75,10 +58,10 @@
         </v-card>
         <ConfirmDeleteDialog v-model="delete_dialog" @confirm="handleDeleteSubmit">
             <template #title>
-                Confirm to delete Character?
+                Confirm to delete Weapon?
             </template>
             <template #content>
-                Are you sure you want to delete "{{ actual_model.name }}" character?
+                Are you sure you want to delete "{{ actual_model.name }}" weapon?
             </template>
         </ConfirmDeleteDialog>
     </div>
@@ -87,25 +70,25 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import type { Ref,  } from 'vue'
-import { Character } from '@/models/Character'
-import { useCharactersStore } from '@/stores/characters/index'
+import { Weapon } from '@/models/Weapon'
+import { useWeaponsStore } from '@/stores/weapons/index'
 import PictureFormInput from '@/components/inputs/PictureFormInput.vue'
 import ConfirmDeleteDialog from '@/components/inputs/ConfirmDeleteDialog.vue'
 import DataTable from '@/components/DataTable.vue'
 import { Pagination } from '@/types/Pagination'
 
-const store$ = useCharactersStore()
+const store$ = useWeaponsStore()
 let headers: Array<any> = [
     { text: 'Icon', value: 'icon', sortable: true },
     { text: 'Name', value: 'name', sortable: true },
     { text: 'Rarity', value: 'rarity', sortable: true },
-    { text: 'Weapon', value: 'weapon_type.name', sortable: true },
-    { text: 'Element', value: 'element.name', sortable: true },
+    { text: 'Type', value: 'weapon_type.name', sortable: true },
+    { text: 'Ascension Materials', value: 'ascension_materials', sortable: true },
     { text: 'Actions', value: 'actions', class: 'text-right' },
 ]
 let pagination = new Pagination({ itemsPerPage: -1 })
-let items: Ref<Array<Character>> = computed(() => {
-    return store$.characters
+let items: Ref<Array<Weapon>> = computed(() => {
+    return store$.weapons
 })
 
 let loading = ref(false)
@@ -113,15 +96,15 @@ let search: Ref<string> = ref("")
 
 // Data Form
 let form_dialog = ref(false)
-let actual_model: Character = reactive(new Character())
+let actual_model: Weapon = reactive(new Weapon())
 let setActualModel = function(element: any){
     actual_model.fill(element)
 }
 let updateModelStore = function (element: any) {
-    store$.updateStoreElement(new Character(element))
+    store$.updateStoreElement(new Weapon(element))
 }
 
-// Delete Character
+// Delete Weapon
 let delete_dialog = ref(false)
 let showDeleteDialog = function (element: any) {
     setActualModel(element)
@@ -130,7 +113,7 @@ let showDeleteDialog = function (element: any) {
 let handleDeleteSubmit = function () {
     delete_dialog.value = false
     loading.value = true
-    store$.delete(new Character(actual_model)).then((response: any) => {
+    store$.delete(new Weapon(actual_model)).then((response: any) => {
         loading.value = false
     })
 }

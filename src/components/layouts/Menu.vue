@@ -8,7 +8,7 @@
         <v-list density="compact" nav>
             <v-list-item prepend-icon="mdi-view-dashboard" title="Home" value="home" router :to="{ name: 'home' }"></v-list-item>
             <v-list-item prepend-icon="mdi-account" title="Characters" value="characters" router :to="{ name: 'characters' }"></v-list-item>
-            <v-list-item prepend-icon="mdi-sword" title="Weapons" value="weapons"></v-list-item>
+            <v-list-item prepend-icon="mdi-sword" title="Weapons" value="weapons" router :to="{ name: 'weapons' }"></v-list-item>
             <v-list-item prepend-icon="mdi-glass-wine" title="Artifacts" value="artifacts"></v-list-item>
             <v-list-item prepend-icon="mdi-package-variant" title="Materials" value="materials" router :to="{ name: 'ascension_materials' }"></v-list-item>
             <v-list-item prepend-icon="mdi-paw" title="Living Beings" value="living_beings"></v-list-item>
