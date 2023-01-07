@@ -4,7 +4,7 @@
       <v-img
         contain
         height="300"
-        src="src/assets/logo.svg"
+        :src="logo"
       />
 
       <div class="text-body-2 font-weight-light mb-n1">Bienvenido a</div>
@@ -75,5 +75,5 @@
 </template>
 
 <script setup lang="ts">
-  
+  const logo = new URL('@/assets/images/logo.svg', import.meta.url).href
 </script>
