@@ -34,6 +34,13 @@
                             {{ ascension_material_type.name }}{{ index < item.ascension_material_types.length-1 ? ', ' : '' }}
                         </template>
                     </template>
+                    <template #item.days="{ item }">
+                        <template v-if="item.ascension_material_farming_days.length > 0">
+                            <template v-for="(ascension_materia_farming_day, index) in item.ascension_material_farming_days">
+                                {{ ascension_materia_farming_day.text }}{{ index < item.ascension_material_farming_days.length-1 ? ', ' : '' }}
+                            </template>
+                        </template>
+                    </template>
                     <template #item.actions="{ item }">
                         <span class="d-flex flex-row">
                             <v-btn color="amber" variant="plain" flat icon @click="showFormDialog(item)">
@@ -87,6 +94,14 @@
                                     item-title="name"
                                     item-value="id"></MultipleCombobox>
                             </v-col>
+                            <v-col cols="12" v-if="isFarmingDaysInputAvailable">
+                                <MultipleCombobox
+                                    v-model="actual_model.ascension_material_farming_days"
+                                    :items="week_days"
+                                    label="Select Days of the week"
+                                    item-title="text"
+                                    item-value="day"></MultipleCombobox>
+                            </v-col>
                         </v-row>
                     </v-container>
                 </v-card-text>
@@ -115,7 +130,7 @@
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
 import type { Ref } from 'vue'
-import { AscensionMaterial } from '@/models/AscensionMaterial'
+import { AscensionMaterial, FarmingDayType, farming_days } from '@/models/AscensionMaterial'
 import { AscensionMaterialType } from '@/models/AscensionMaterialType'
 import { useAscensionMaterialsStore } from '@/stores/ascension_materials/index'
 import PictureFormInput from '@/components/inputs/PictureFormInput.vue'
@@ -132,12 +147,14 @@ let headers: Array<any> = [
     { text: 'Rarity', value: 'rarity', sortable: true },
     { text: 'Description', value: 'description', sortable: true },
     { text: 'Types', value: 'types', sortable: true },
+    { text: 'Days', value: 'days', sortable: true },
     { text: 'Actions', value: 'actions', class: 'text-right' },
 ]
 let items: Ref<Array<AscensionMaterial>> = computed(() => {
     return store$.ascension_materials
 })
 let ascension_material_types: Array<AscensionMaterialType> = []
+let week_days: Array<FarmingDayType> = farming_days
 
 let loading = ref(false)
 let search: Ref<string> = ref("")
@@ -202,6 +219,15 @@ let handleDeleteSubmit = function () {
         loading.value = false
     })
 }
+
+let isFarmingDaysInputAvailable = computed(() => {
+    if(actual_model.ascension_material_types.some(ascension_material_type => {
+        if(ascension_material_type.name == 'Weapon Ascension Materials (Primary)') return true
+        else if(ascension_material_type.name == 'Book Materials') return true
+        else return false
+    })) return true
+    return false
+})
 
 onMounted(() => {
     loading.value = true
